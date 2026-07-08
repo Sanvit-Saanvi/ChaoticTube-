@@ -1,0 +1,14 @@
+body {
+  background: lightgreen;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+video {
+  width: 400px;
+  margin-top: 10px;
+}
+
+#videoFeed {
+  margin-top: 20px;
+}
