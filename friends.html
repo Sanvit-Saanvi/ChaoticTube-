@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChaoticTube — Friends</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="friends.css">
+  <script>
+    try {
+      const theme = JSON.parse(localStorage.getItem("ct-theme"));
+      if (theme) {
+        document.documentElement.style.setProperty("--bg", theme.bg);
+        document.documentElement.style.setProperty("--accent", theme.accent || "#7c6af7");
+        document.body.style.background = theme.bg;
+        if (theme.mode === "light") document.body.classList.add("light");
+      }
+    } catch {}
+  </script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="back-btn">⬅ ChaoticTube</a>
+    <h1>👥 Friends</h1>
+    <p class="user-label" id="userLabel"></p>
+  </header>
+
+  <main>
+
+    <!-- Send Friend Request -->
+    <section class="friends-section">
+      <h2 class="section-title">➕ Add Friend</h2>
+      <div class="search-row">
+        <input type="text" id="friendSearchInput" placeholder="Enter display name…" maxlength="30">
+        <button id="sendRequestBtn" class="action-btn">Send Request</button>
+      </div>
+      <p id="requestStatus" class="request-status"></p>
+    </section>
+
+    <!-- Pending Requests -->
+    <section class="friends-section">
+      <h2 class="section-title">📬 Pending Requests</h2>
+      <div id="pendingList" class="friends-list">
+        <p class="empty-msg">Loading…</p>
+      </div>
+    </section>
+
+    <!-- Your Friends -->
+    <section class="friends-section">
+      <h2 class="section-title">👥 Your Friends</h2>
+      <div id="friendsList" class="friends-list">
+        <p class="empty-msg">Loading…</p>
+      </div>
+    </section>
+
+    <!-- Challenges -->
+    <section class="friends-section">
+      <h2 class="section-title">⚔️ Challenges</h2>
+
+      <!-- Send Challenge -->
+      <div class="challenge-send">
+        <p class="challenge-label">Challenge a friend:</p>
+        <div class="challenge-row">
+          <select id="challengeFriend">
+            <option value="">Select a friend…</option>
+          </select>
+          <select id="challengeType">
+            <option value="hearts">❤️ Heart Challenge</option>
+            <option value="theme">🎭 Theme Challenge</option>
+            <option value="rating">⭐ Rating Challenge</option>
+            <option value="trending">🔥 Trending Challenge</option>
+            <option value="title">🏆 Best Title Challenge</option>
+          </select>
+          <span class="deadline-label">Deadline:</span>
+          <input type="datetime-local" id="challengeDeadline">
+          <button id="sendChallengeBtn" class="action-btn">⚔️ Challenge!</button>
+        </div>
+        <div id="themeInputWrap" class="hidden">
+          <input type="text" id="themeInput" placeholder="Enter the theme (e.g. funniest moment)…" maxlength="50">
+        </div>
+        <p id="challengeStatus" class="request-status"></p>
+      </div>
+
+      <!-- Active Challenges -->
+      <div class="challenge-divider">
+        <p class="challenge-label">Active Challenges</p>
+      </div>
+      <div id="challengesList" class="friends-list">
+        <p class="empty-msg">Loading…</p>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script type="module" src="friends.js"></script>
+</body>
+</html>
