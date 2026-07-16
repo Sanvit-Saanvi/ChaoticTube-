@@ -1,0 +1,524 @@
+/* ChaoticTube Hall of Fame styles */
+:root {
+  --bg:      #0f0f11;
+  --surface: #1a1a1f;
+  --surface2:#242429;
+  --border:  #2e2e36;
+  --text:    #f0f0f2;
+  --text-sub:#9090a0;
+  --danger:  #e05a5a;
+  --success: #4caf7d;
+  --radius:  12px;
+  --font:    'Inter', system-ui, sans-serif;
+}
+
+body.light {
+  --surface:   rgba(255,255,255,0.72);
+  --surface2:  rgba(0,0,0,0.06);
+  --border:    rgba(0,0,0,0.12);
+  --text:      #111118;
+  --text-sub:  #55556a;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+header {
+  background: rgba(15,15,17,0.9);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 20px 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  text-align: center;
+}
+
+.back-btn {
+  align-self: flex-start;
+  color: gold;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+  transition: opacity 0.15s;
+}
+
+.back-btn:hover { opacity: 0.75; }
+
+header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.month-label {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+/* ── Dark/Light slider ───────────────────────────── */
+.hof-theme-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 4px;
+  font-size: 16px;
+}
+
+.slider-label {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+}
+
+.slider-label input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  inset: 0;
+  background: #2e2e36;
+  border-radius: 24px;
+  transition: background 0.3s;
+}
+
+.slider::before {
+  content: "";
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  left: 3px;
+  bottom: 3px;
+  background: #fff;
+  border-radius: 50%;
+  transition: transform 0.3s;
+}
+
+.slider-label input:checked + .slider { background: gold; }
+.slider-label input:checked + .slider::before { transform: translateX(20px); }
+
+/* ── Admin bar ───────────────────────────────────── */
+.admin-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  padding: 12px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+#adminPassword {
+  padding: 7px 12px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-family: var(--font);
+  font-size: 13px;
+  outline: none;
+  width: 160px;
+}
+
+#adminPassword:focus { border-color: gold; }
+
+#adminBtn {
+  padding: 7px 16px;
+  background: gold;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-family: var(--font);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+#adminBtn:hover { opacity: 0.85; }
+
+#adminStatus {
+  font-size: 13px;
+  color: var(--text-sub);
+}
+
+#adminStatus.unlocked { color: #4caf7d; }
+
+main {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 24px 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+
+/* ── Section headers ─────────────────────────────── */
+.section-header {
+  margin-bottom: 20px;
+}
+
+.section-header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.section-sub {
+  font-size: 13px;
+  color: var(--text-sub);
+  margin-top: 4px;
+}
+
+/* ── Meme of the Month list ──────────────────────── */
+.motm-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.motm-item {
+  background: var(--surface);
+  border: 1px solid rgba(255,215,0,0.3);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.motm-rank {
+  font-size: 20px;
+  font-weight: 700;
+  color: gold;
+  min-width: 32px;
+  text-align: center;
+}
+
+.motm-title {
+  flex: 1;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.motm-votes {
+  font-size: 13px;
+  font-weight: 700;
+  color: gold;
+}
+
+.motm-vote-btn {
+  background: none;
+  border: 1px solid gold;
+  border-radius: 6px;
+  color: gold;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.motm-vote-btn:hover:not(:disabled) { background: gold; color: #000; }
+.motm-vote-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.motm-vote-btn.voted { background: gold; color: #000; }
+
+.motm-unvote-btn {
+  background: none;
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  color: var(--danger);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  display: none;
+}
+
+.motm-unvote-btn.visible { display: flex !important; }
+.motm-unvote-btn:hover { background: var(--danger); color: #fff; }
+
+.empty-section {
+  color: var(--text-sub);
+  font-size: 14px;
+  text-align: center;
+  padding: 24px;
+  background: var(--surface);
+  border-radius: var(--radius);
+}
+
+/* ── Meme of the Year list ───────────────────────── */
+.moty-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.moty-item {
+  background: var(--surface);
+  border: 2px solid gold;
+  border-radius: var(--radius);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.moty-month {
+  font-size: 11px;
+  font-weight: 600;
+  color: gold;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.moty-title {
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.moty-votes {
+  font-size: 12px;
+  color: var(--text-sub);
+}
+
+/* ── Categories grid ─────────────────────────────── */
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 24px;
+}
+
+.category-card {
+  background: var(--surface);
+  border: 2px solid gold;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.category-header {
+  background: rgba(255,215,0,0.08);
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255,215,0,0.2);
+}
+
+.category-header h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: gold;
+}
+
+.nom-count {
+  font-size: 12px;
+  color: rgba(255,215,0,0.6);
+  margin-top: 4px;
+}
+
+.nominations-list {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.empty-category {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 14px;
+}
+
+/* ── Nomination item ─────────────────────────────── */
+.nom-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.nom-footer {
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.nom-title {
+  font-size: 13px;
+  font-weight: 600;
+  flex: 1;
+  word-break: break-word;
+}
+
+.vote-btn {
+  background: none;
+  border: 1px solid gold;
+  border-radius: 6px;
+  color: gold;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.vote-btn:hover:not(:disabled) { background: gold; color: #000; }
+.vote-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.vote-btn.voted { background: gold; color: #000; }
+
+.vote-count {
+  font-size: 13px;
+  font-weight: 700;
+  color: gold;
+  min-width: 24px;
+  text-align: right;
+}
+
+.unvote-btn {
+  background: none;
+  border: 1px solid var(--danger);
+  border-radius: 6px;
+  color: var(--danger);
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+  display: none;
+}
+
+.unvote-btn.visible { display: flex !important; }
+.unvote-btn:hover { background: var(--danger); color: #fff; }
+
+/* ── End of Month Popup ──────────────────────────── */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.8);
+  z-index: 300;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.popup {
+  background: var(--surface);
+  border: 2px solid gold;
+  border-radius: 20px;
+  padding: 32px;
+  max-width: 520px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.popup h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: gold;
+  text-align: center;
+}
+
+.popup-sub {
+  font-size: 13px;
+  color: var(--text-sub);
+  text-align: center;
+}
+
+.popup-nom-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.popup-nom-item {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.popup-nom-title {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.popup-nom-votes {
+  font-size: 13px;
+  font-weight: 700;
+  color: gold;
+}
+
+.popup-vote-btn {
+  background: none;
+  border: 1px solid gold;
+  border-radius: 6px;
+  color: gold;
+  font-family: var(--font);
+  font-size: 12px;
+  font-weight: 600;
+  padding: 5px 12px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  white-space: nowrap;
+}
+
+.popup-vote-btn:hover:not(:disabled) { background: gold; color: #000; }
+.popup-vote-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.popup-vote-btn.voted { background: gold; color: #000; }
+
+.popup-close {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text-sub);
+  font-family: var(--font);
+  font-size: 13px;
+  padding: 10px;
+  cursor: pointer;
+  transition: border-color 0.15s;
+  margin-top: 8px;
+}
+
+.popup-close:hover { border-color: var(--danger); color: var(--danger); }
+
+.hidden { display: none !important; }
+
+@media (max-width: 600px) {
+  main { padding: 24px 16px 48px; }
+  .categories-grid { grid-template-columns: 1fr; }
+  .moty-list { grid-template-columns: 1fr; }
+}
