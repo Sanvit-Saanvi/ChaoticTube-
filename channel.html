@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChaoticTube — Channel</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="channel.css">
+  <script>
+    try {
+      const theme = JSON.parse(localStorage.getItem("ct-theme"));
+      if (theme) {
+        document.documentElement.style.setProperty("--bg", theme.bg);
+        document.documentElement.style.setProperty("--accent", theme.accent || "#7c6af7");
+        document.body.style.background = theme.bg;
+        if (theme.mode === "light") document.body.classList.add("light");
+      }
+    } catch {}
+  </script>
+</head>
+<body>
+
+  <header>
+    <button onclick="window.location.replace('index.html')" class="back-btn">⬅ ChaoticTube</button>
+  </header>
+
+  <div class="channel-hero">
+    <div class="channel-avatar" id="channelAvatar">🎭</div>
+    <div class="channel-info">
+      <h1 id="channelName">Loading…</h1>
+      <p id="channelStats" class="channel-stats"></p>
+    </div>
+  </div>
+
+  <main>
+    <div class="feed-header">
+      <h2>Videos</h2>
+      <p id="videoCount" class="feed-count"></p>
+    </div>
+    <div id="channelFeed" class="video-grid">
+      <div class="loading-state">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </div>
+    <p id="emptyState" class="empty-state hidden">This channel hasn't uploaded any videos yet!</p>
+  </main>
+
+  <script type="module" src="channel.js"></script>
+</body>
+</html>
