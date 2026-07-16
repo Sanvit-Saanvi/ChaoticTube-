@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChaoticTube — Hall of Fame</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="halloffame.css">
+  <script>
+    try {
+      const theme = JSON.parse(localStorage.getItem("ct-theme"));
+      if (theme) {
+        document.documentElement.style.setProperty("--bg", theme.bg);
+        document.documentElement.style.setProperty("--accent", theme.accent || "#7c6af7");
+        document.body.style.background = theme.bg;
+        if (theme.mode === "light") document.body.classList.add("light");
+      }
+    } catch {}
+  </script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="back-btn">⬅ ChaoticTube</a>
+    <h1>🏆 Hall of Fame</h1>
+    <p class="month-label" id="monthLabel"></p>
+    <div class="hof-theme-toggle">
+      <span>🌙</span>
+      <label class="slider-label">
+        <input type="checkbox" id="hofModeToggle">
+        <span class="slider"></span>
+      </label>
+      <span>☀️</span>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Meme of the Month Section -->
+    <section class="motm-section">
+      <div class="section-header">
+        <h2>🏆 Meme of the Month — Current Contestants</h2>
+        <p class="section-sub">Video with most votes at 12:00 PM on the last day wins!</p>
+      </div>
+      <div id="motmList" class="motm-list"></div>
+    </section>
+
+    <!-- Meme of the Year Contestants -->
+    <section class="moty-section">
+      <div class="section-header">
+        <h2>👑 Meme of the Year — Past Winners</h2>
+        <p class="section-sub">Monthly winners competing for the ultimate title!</p>
+      </div>
+      <div id="motyList" class="moty-list"></div>
+    </section>
+
+    <!-- All Categories -->
+    <section>
+      <div class="section-header">
+        <h2>🎖️ All Categories</h2>
+      </div>
+      <div id="categoriesGrid" class="categories-grid"></div>
+    </section>
+
+  </main>
+
+  <!-- End of Month Pop-up -->
+  <div id="motmPopup" class="popup-overlay hidden">
+    <div class="popup">
+      <h2>🏆 Meme of the Month!</h2>
+      <p class="popup-sub">Vote for your favourite before midnight!</p>
+      <div id="popupNomList" class="popup-nom-list"></div>
+      <button id="popupClose" class="popup-close">Close</button>
+    </div>
+  </div>
+
+  <script type="module" src="halloffame.js"></script>
+</body>
+</html>
