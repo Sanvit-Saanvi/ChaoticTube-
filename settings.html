@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ChaoticTube — Settings</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="settings.css">
+  <script>
+    try {
+      const theme = JSON.parse(localStorage.getItem("ct-theme"));
+      if (theme) {
+        document.documentElement.style.setProperty("--bg", theme.bg);
+        document.documentElement.style.setProperty("--accent", theme.accent || "#7c6af7");
+        document.body.style.background = theme.bg;
+        if (theme.mode === "light") document.body.classList.add("light");
+      }
+    } catch {}
+  </script>
+</head>
+<body>
+
+  <header>
+    <a href="index.html" class="back-btn">⬅ ChaoticTube</a>
+    <h1>⚙️ Settings</h1>
+  </header>
+
+  <main>
+
+    <!-- Appearance -->
+    <section class="settings-section">
+      <h2 class="section-title">🎨 Appearance</h2>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Mode</p>
+          <p class="setting-desc">Switch between dark and light mode</p>
+        </div>
+        <div class="mode-toggle">
+          <button class="mode-btn active" data-mode="dark">🌙 Dark</button>
+          <button class="mode-btn" data-mode="light">☀️ Light</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Background Color</p>
+          <p class="setting-desc">Pick a preset or choose your own</p>
+        </div>
+        <div class="swatch-row">
+          <button class="swatch" data-color="#0f0f11" title="Void" style="background:#0f0f11"></button>
+          <button class="swatch" data-color="#0d1117" title="Midnight" style="background:#0d1117"></button>
+          <button class="swatch" data-color="#1a0a2e" title="Deep Purple" style="background:#1a0a2e"></button>
+          <button class="swatch" data-color="#0a1628" title="Navy" style="background:#0a1628"></button>
+          <button class="swatch" data-color="#0f1f0f" title="Forest" style="background:#0f1f0f"></button>
+          <button class="swatch" data-color="#1f0a0a" title="Ember" style="background:#1f0a0a"></button>
+          <button class="swatch" data-color="#f5f5f0" title="Paper" style="background:#f5f5f0"></button>
+          <button class="swatch" data-color="#eef2ff" title="Lavender" style="background:#eef2ff"></button>
+          <button class="swatch" data-color="#fff8f0" title="Warm" style="background:#fff8f0"></button>
+          <label class="swatch swatch-custom" title="Custom colour">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <input type="color" id="customColorPicker" value="#0f0f11">
+          </label>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Accent Color</p>
+          <p class="setting-desc">Color used for buttons and highlights</p>
+        </div>
+        <div class="swatch-row">
+          <button class="swatch accent-swatch" data-accent="#7c6af7" title="Purple" style="background:#7c6af7"></button>
+          <button class="swatch accent-swatch" data-accent="#3b82f6" title="Blue" style="background:#3b82f6"></button>
+          <button class="swatch accent-swatch" data-accent="#10b981" title="Emerald" style="background:#10b981"></button>
+          <button class="swatch accent-swatch" data-accent="#f59e0b" title="Amber" style="background:#f59e0b"></button>
+          <button class="swatch accent-swatch" data-accent="#ef4444" title="Red" style="background:#ef4444"></button>
+          <button class="swatch accent-swatch" data-accent="#ec4899" title="Pink" style="background:#ec4899"></button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Font Size</p>
+          <p class="setting-desc">Adjust the text size across the site</p>
+        </div>
+        <div class="btn-group">
+          <button class="opt-btn" data-font="small">Small</button>
+          <button class="opt-btn active" data-font="medium">Medium</button>
+          <button class="opt-btn" data-font="large">Large</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Card Size</p>
+          <p class="setting-desc">How big video cards appear in the feed</p>
+        </div>
+        <div class="btn-group">
+          <button class="opt-btn" data-card="compact">Compact</button>
+          <button class="opt-btn active" data-card="normal">Normal</button>
+          <button class="opt-btn" data-card="large">Large</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Feed Layout</p>
+          <p class="setting-desc">How videos are arranged in the feed</p>
+        </div>
+        <div class="btn-group">
+          <button class="opt-btn active" data-layout="grid">Grid</button>
+          <button class="opt-btn" data-layout="list">List</button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Feed Preferences -->
+    <section class="settings-section">
+      <h2 class="section-title">📋 Feed Preferences</h2>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Default Sort Order</p>
+          <p class="setting-desc">How videos are ordered when you load the page</p>
+        </div>
+        <div class="btn-group">
+          <button class="opt-btn active" data-sort="newest">Newest</button>
+          <button class="opt-btn" data-sort="oldest">Oldest</button>
+          <button class="opt-btn" data-sort="random">Random</button>
+        </div>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Show Pinned Videos</p>
+          <p class="setting-desc">Show or hide pinned videos at the top</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="showPinned" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+    </section>
+
+    <!-- Playback -->
+    <section class="settings-section">
+      <h2 class="section-title">▶️ Playback</h2>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Autoplay</p>
+          <p class="setting-desc">Automatically play videos when you scroll to them</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="autoplay">
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Default Volume</p>
+          <p class="setting-desc">Starting volume for all videos</p>
+        </div>
+        <div class="slider-row">
+          <input type="range" id="volumeSlider" min="0" max="100" value="100">
+          <span id="volumeValue">100%</span>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Personal -->
+      <section class="settings-section">
+        <h2 class="section-title">👤 Personal</h2>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <p class="setting-name">Display Name</p>
+            <p class="setting-desc">Shows under your video titles and on nominations</p>
+          </div>
+          <div class="input-row">
+            <input type="text" id="displayName" placeholder="Enter your name…" maxlength="30">
+            <button id="saveNameBtn" class="save-btn">Save</button>
+            <span class="inline-saved hidden" id="savedName">✓</span>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <p class="setting-name">Avatar Emoji</p>
+            <p class="setting-desc">Shows next to your display name</p>
+          </div>
+          <div class="input-row">
+            <input type="text" id="avatarEmoji" placeholder="🎭" maxlength="2">
+            <button id="saveAvatarBtn" class="save-btn">Save</button>
+            <span class="inline-saved hidden" id="savedAvatar">✓</span>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">Creator Password</p>
+          <p class="setting-desc">Password required to delete your videos</p>
+        </div>
+        <div class="input-row">
+          <input type="password" id="creatorPassword" placeholder="Set a password…" maxlength="30">
+          <button id="savePasswordBtn" class="save-btn">Save</button>
+          <span class="inline-saved hidden" id="savedPassword">✓</span>
+        </div>
+      </div>
+
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <p class="setting-name">Security Question</p>
+            <p class="setting-desc">Used to reset your password if forgotten</p>
+          </div>
+          <div class="security-question-wrap">
+            <select id="securityQuestion">
+              <option value="">Select a question…</option>
+              <option value="1">🏙️ What city were you born in?</option>
+              <option value="2">🍕 What is your favourite food?</option>
+              <option value="3">🎬 What is your favourite movie?</option>
+              <option value="4">🎵 What is your favourite song?</option>
+              <option value="5">🌍 What is your favourite place?</option>
+            </select>
+            <input type="text" id="securityAnswer" placeholder="Your answer…" maxlength="50">
+            <button id="saveSecurityBtn" class="save-btn">Save</button>
+            <span class="inline-saved hidden" id="savedSecurity">✓</span>
+            <button id="resetSecurityBtn" class="opt-btn" style="border-color: var(--danger); color: var(--danger);">Reset</button>
+          </div>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <p class="setting-name">Forgot Password?</p>
+            <p class="setting-desc">Reset your password using your security question</p>
+          </div>
+          <button id="forgotPasswordBtn" class="opt-btn">Reset Password</button>
+        </div>
+
+        <div class="setting-row">
+          <div class="setting-info">
+            <p class="setting-name">Profile Color</p>
+            <p class="setting-desc">Your personal color that represents you</p>
+          </div>
+          <input type="color" id="profileColor" value="#7c6af7" class="color-input">
+        </div>
+
+        <div class="setting-row">
+         <div class="setting-info">
+            <p class="setting-name">Watch History</p>
+            <p class="setting-desc">Videos you've watched recently</p>
+          </div>
+          <div class="btn-group">
+            <button class="opt-btn" id="viewHistoryBtn">View History</button>
+            <button class="opt-btn" id="clearHistoryBtn" style="border-color: var(--danger); color: var(--danger);">Clear</button>
+          </div>
+        </div>
+
+        <div id="historyPanel" class="hidden">
+          <div id="historyList" class="history-list"></div>
+        </div>
+
+      </section>
+
+      <!-- Notifications -->
+    <section class="settings-section">
+      <h2 class="section-title">🔔 Notifications</h2>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">New Video Toast</p>
+          <p class="setting-desc">Show a small popup when a new video is uploaded (disappears after 6 seconds)</p>
+        </div>
+        <label class="toggle-switch">
+          <input type="checkbox" id="newVideoNotif" checked>
+          <span class="toggle-slider"></span>
+        </label>
+      </div>
+
+    </section>
+
+    <p class="saved-msg hidden" id="savedMsg">✓ Settings saved!</p>
+
+    <!-- Stats -->
+    <section class="settings-section">
+      <h2 class="section-title">📊 Your Stats</h2>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">📹 Videos Uploaded</p>
+          <p class="setting-desc">Total videos you've uploaded to ChaoticTube</p>
+        </div>
+        <p class="stat-value" id="statUploads">—</p>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">❤️ Hearts Given</p>
+          <p class="setting-desc">Total videos you've hearted</p>
+        </div>
+        <p class="stat-value" id="statHearts">—</p>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">🏆 Nominations Made</p>
+          <p class="setting-desc">Total videos you've nominated for Hall of Fame</p>
+        </div>
+        <p class="stat-value" id="statNominations">—</p>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">👀 Videos Watched</p>
+          <p class="setting-desc">Total videos in your watch history</p>
+        </div>
+        <p class="stat-value" id="statWatched">—</p>
+      </div>
+
+      <div class="setting-row">
+        <div class="setting-info">
+          <p class="setting-name">🕐 Last Watched</p>
+          <p class="setting-desc">Most recently watched video</p>
+        </div>
+        <p class="stat-value" id="statLastWatched">—</p>
+      </div>
+
+    </section>
+
+  <!-- Admin Section -->
+    <section class="settings-section" id="adminSection">
+      <h2 class="section-title">🔐 Admin Panel</h2>
+
+      <div class="setting-row" id="adminLockRow">
+        <div class="setting-info">
+          <p class="setting-name">Admin Access</p>
+          <p class="setting-desc">Enter admin password to unlock</p>
+        </div>
+        <div class="input-row">
+          <input type="password" id="adminPwdInput" placeholder="Admin password…">
+          <button id="adminUnlockBtn" class="save-btn">Unlock</button>
+        </div>
+      </div>
+
+      <div class="setting-row hidden" id="adminHideRow">
+        <div class="setting-info">
+          <p class="setting-name">Admin Access</p>
+          <p class="setting-desc">Admin panel is unlocked</p>
+        </div>
+        <button id="adminHideBtn" class="opt-btn" style="border-color: var(--danger); color: var(--danger);">Hide</button>
+      </div>
+
+      <div id="adminContent" class="hidden">
+
+        <!-- Site Stats -->
+        <div class="admin-group">
+          <p class="admin-group-title">📊 Site Stats</p>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Total Videos</p>
+            </div>
+            <p class="stat-value" id="adminStatVideos">—</p>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Total Nominations This Month</p>
+            </div>
+            <p class="stat-value" id="adminStatNoms">—</p>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Most Hearted Video</p>
+            </div>
+            <p class="stat-value" id="adminStatHearted">—</p>
+          </div>
+        </div>
+
+        <!-- All Display Names -->
+        <div class="admin-group">
+          <p class="admin-group-title">👥 All Display Names</p>
+          <div id="adminDisplayNames" class="admin-list"></div>
+        </div>
+
+        <!-- Upload History -->
+        <div class="admin-group">
+          <p class="admin-group-title">📋 Upload History</p>
+          <div id="adminUploadHistory" class="admin-list"></div>
+        </div>
+
+        <!-- Pin Videos -->
+        <div class="admin-group">
+          <p class="admin-group-title">📌 Pin Videos (max 3)</p>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Pin a video by title</p>
+            </div>
+            <div class="input-row">
+              <input type="text" id="pinVideoInput" placeholder="Video title…">
+              <button id="pinVideoBtn" class="save-btn">Pin</button>
+            </div>
+          </div>
+          <div id="pinnedList" class="admin-list"></div>
+        </div>
+
+        <!-- Edit Video Title -->
+        <div class="admin-group">
+          <p class="admin-group-title">✏️ Edit Video Title</p>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Find video by current title</p>
+            </div>
+            <div class="input-row">
+              <input type="text" id="editVideoSearch" placeholder="Current title…">
+              <input type="text" id="editVideoNew" placeholder="New title…">
+              <button id="editVideoBtn" class="save-btn">Update</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Delete Video -->
+        <div class="admin-group">
+          <p class="admin-group-title">🗑️ Delete Video</p>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Delete a video by title</p>
+            </div>
+            <div class="input-row">
+              <input type="text" id="deleteVideoInput" placeholder="Video title…">
+              <button id="deleteVideoBtn" class="save-btn" style="background: var(--danger);">Delete</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Announcement Banner -->
+        <div class="admin-group">
+          <p class="admin-group-title">📢 Announcement Banner</p>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Post an announcement</p>
+              <p class="setting-desc">Shows at the top of the main page for everyone</p>
+            </div>
+            <div class="input-row">
+              <input type="text" id="announcementInput" placeholder="Announcement text…" maxlength="100">
+              <button id="postAnnouncementBtn" class="save-btn">Post</button>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Schedule announcement</p>
+              <p class="setting-desc">Post announcement at a specific date and time</p>
+            </div>
+            <div class="input-row">
+              <input type="datetime-local" id="announcementDate">
+              <button id="scheduleAnnouncementBtn" class="save-btn">Schedule</button>
+            </div>
+          </div>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Clear announcement</p>
+            </div>
+            <button id="clearAnnouncementBtn" class="opt-btn" style="border-color: var(--danger); color: var(--danger);">Clear</button>
+          </div>
+        </div>
+
+        <!-- Add Hall of Fame Category -->
+        <div class="admin-group">
+          <p class="admin-group-title">➕ Add Hall of Fame Category</p>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">New category</p>
+              <p class="setting-desc">Add a new category to the Hall of Fame</p>
+            </div>
+            <div class="input-row">
+              <input type="text" id="newCategoryEmoji" placeholder="🎯" maxlength="2" style="width:50px">
+              <input type="text" id="newCategoryName" placeholder="Category name…" maxlength="30">
+              <button id="addCategoryBtn" class="save-btn">Add</button>
+            </div>
+          </div>
+          <div id="customCategoriesList" class="admin-list"></div>
+        </div>
+
+        <!-- Reset Votes -->
+        <div class="admin-group">
+          <p class="admin-group-title">🔄 Reset Hall of Fame Votes</p>
+          <div class="setting-row">
+            <div class="setting-info">
+              <p class="setting-name">Reset votes for a category</p>
+              <p class="setting-desc">Sets all votes to 0 for the selected category this month</p>
+            </div>
+            <div class="input-row">
+              <select id="resetCategorySelect">
+                <option value="">Select category…</option>
+                <option value="meme-year">👑 Meme of the Year</option>
+                <option value="meme-month">🏆 Meme of the Month</option>
+                <option value="most-chaotic">🌪️ Most Chaotic</option>
+                <option value="most-crazy">🤯 Most Crazy</option>
+                <option value="funniest">😂 Funniest Video</option>
+                <option value="most-underrated">🏅 Most Underrated</option>
+              </select>
+              <button id="resetVotesBtn" class="save-btn" style="background: var(--danger);">Reset</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script src="settings.js"></script>
+</body>
+</html>
