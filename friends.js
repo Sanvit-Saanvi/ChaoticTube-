@@ -34,17 +34,14 @@ sendRequestBtn.addEventListener("click", async () => {
   if (!targetName) { setStatus("Enter a display name!", "error"); return; }
   if (targetName === myName) { setStatus("You can't add yourself!", "error"); return; }
 
-  // Check if already friends
   const friendRef = doc(db, "friends", `${myName}_${targetName}`);
   const friendSnap = await getDoc(friendRef);
   if (friendSnap.exists()) { setStatus("You're already friends!", "error"); return; }
 
-  // Check if request already sent
   const reqRef = doc(db, "friendRequests", `${myName}_${targetName}`);
   const reqSnap = await getDoc(reqRef);
   if (reqSnap.exists()) { setStatus("Request already sent!", "error"); return; }
 
-  // Check if target user exists (has uploaded a video or has a profile)
   const profileSnap = await getDoc(doc(db, "userProfiles", targetName));
   const videosSnap  = await getDocs(query(collection(db, "videos"), where("displayName", "==", targetName)));
   if (!profileSnap.exists() && videosSnap.empty) {
@@ -52,13 +49,12 @@ sendRequestBtn.addEventListener("click", async () => {
     return;
   }
 
-  // Send request
   await setDoc(reqRef, {
-    from:      myName,
+    from:       myName,
     fromAvatar: myAvatar,
-    to:        targetName,
-    status:    "pending",
-    createdAt: serverTimestamp()
+    to:         targetName,
+    status:     "pending",
+    createdAt:  serverTimestamp()
   });
 
   friendSearchInput.value = "";
@@ -95,18 +91,16 @@ async function loadPending() {
   `).join("");
 
   pendingList.querySelectorAll(".friend-item").forEach(item => {
-    const reqId   = item.dataset.id;
+    const reqId    = item.dataset.id;
     const fromName = item.dataset.from;
 
     item.querySelector(".accept-btn").addEventListener("click", async () => {
-      // Add friendship both ways
       await setDoc(doc(db, "friends", `${myName}_${fromName}`), {
         user1: myName, user2: fromName, createdAt: serverTimestamp()
       });
       await setDoc(doc(db, "friends", `${fromName}_${myName}`), {
         user1: fromName, user2: myName, createdAt: serverTimestamp()
       });
-      // Delete request
       await deleteDoc(doc(db, "friendRequests", reqId));
       item.remove();
       if (pendingList.querySelectorAll(".friend-item").length === 0) {
@@ -152,16 +146,15 @@ async function loadFriends() {
     return;
   }
 
-  // Get avatars from userProfiles
   friendsList.innerHTML = "";
   for (const f of friends) {
-    const friendName = f.user2;
-    const profileSnap = await getDoc(doc(db, "userProfiles", friendName));
-    const avatar = profileSnap.exists() ? profileSnap.data().avatar || "🎭" : "🎭";
+    const friendName   = f.user2;
+    const profileSnap  = await getDoc(doc(db, "userProfiles", friendName));
+    const avatar       = profileSnap.exists() ? profileSnap.data().avatar || "🎭" : "🎭";
+    const customTitle  = getCustomTitle(friendName);
 
     const item = document.createElement("div");
     item.className = "friend-item";
-    const customTitle = getCustomTitle(friendName);
     item.innerHTML = `
       <div class="friend-avatar">${avatar}</div>
       <div class="friend-info">
@@ -176,10 +169,10 @@ async function loadFriends() {
     `;
 
     item.querySelector(".remove-btn").addEventListener("click", async () => {
-      const friendName2 = item.querySelector(".remove-btn").dataset.friend;
-      if (!confirm(`Remove ${friendName2} as a friend?`)) return;
-      await deleteDoc(doc(db, "friends", `${myName}_${friendName2}`));
-      await deleteDoc(doc(db, "friends", `${friendName2}_${myName}`));
+      const fn = item.querySelector(".remove-btn").dataset.friend;
+      if (!confirm(`Remove ${fn} as a friend?`)) return;
+      await deleteDoc(doc(db, "friends", `${myName}_${fn}`));
+      await deleteDoc(doc(db, "friends", `${fn}_${myName}`));
       item.remove();
       if (friendsList.querySelectorAll(".friend-item").length === 0) {
         friendsList.innerHTML = `<p class="empty-msg">No friends yet — send a request!</p>`;
@@ -187,9 +180,9 @@ async function loadFriends() {
     });
 
     item.querySelector(".title-btn").addEventListener("click", () => {
-      const current = getCustomTitle(friendName);
+      const current  = getCustomTitle(friendName);
       const newTitle = prompt(`Set a custom title for ${friendName}:`, current);
-      if (newTitle === null) return; // cancelled
+      if (newTitle === null) return;
       setCustomTitle(friendName, newTitle.trim());
       item.querySelector(".friend-meta").textContent = newTitle.trim()
         ? `🎖️ ${newTitle.trim()}`
@@ -222,12 +215,10 @@ const themeInputWrap        = document.getElementById("themeInputWrap");
 const themeInput            = document.getElementById("themeInput");
 const challengesList        = document.getElementById("challengesList");
 
-// Show theme input only for theme challenge
 challengeTypeSelect.addEventListener("change", () => {
   themeInputWrap.classList.toggle("hidden", challengeTypeSelect.value !== "theme");
 });
 
-// Populate friends dropdown
 async function populateChallengeFriends() {
   const snap = await getDocs(query(
     collection(db, "friends"),
@@ -241,15 +232,14 @@ async function populateChallengeFriends() {
   });
 }
 
-// Send challenge
 sendChallengeBtn.addEventListener("click", async () => {
   const target   = challengeFriendSelect.value;
   const type     = challengeTypeSelect.value;
   const deadline = challengeDeadline.value;
   const theme    = themeInput.value.trim();
 
-  if (!target) { challengeStatus.textContent = "Select a friend!"; challengeStatus.className = "request-status error"; return; }
-  if (!deadline) { challengeStatus.textContent = "Set a deadline!"; challengeStatus.className = "request-status error"; return; }
+  if (!target)   { challengeStatus.textContent = "Select a friend!"; challengeStatus.className = "request-status error"; return; }
+  if (!deadline) { challengeStatus.textContent = "Set a deadline!";  challengeStatus.className = "request-status error"; return; }
   if (type === "theme" && !theme) { challengeStatus.textContent = "Enter a theme!"; challengeStatus.className = "request-status error"; return; }
 
   const challengeId = `${myName}_${target}_${Date.now()}`;
@@ -264,21 +254,20 @@ sendChallengeBtn.addEventListener("click", async () => {
   });
 
   challengeStatus.textContent = `Challenge sent to ${target}! ⚔️`;
-  challengeStatus.className = "request-status success";
-  challengeDeadline.value = "";
-  themeInput.value = "";
+  challengeStatus.className   = "request-status success";
+  challengeDeadline.value     = "";
+  themeInput.value            = "";
   loadChallenges();
 });
 
-// Load challenges
 async function loadChallenges() {
   const [sentSnap, receivedSnap] = await Promise.all([
     getDocs(query(collection(db, "challenges"), where("from", "==", myName))),
-    getDocs(query(collection(db, "challenges"), where("to", "==", myName)))
+    getDocs(query(collection(db, "challenges"), where("to",   "==", myName)))
   ]);
 
   const challenges = [
-    ...sentSnap.docs.map(d => ({ id: d.id, ...d.data(), direction: "sent" })),
+    ...sentSnap.docs.map(d     => ({ id: d.id, ...d.data(), direction: "sent" })),
     ...receivedSnap.docs.map(d => ({ id: d.id, ...d.data(), direction: "received" }))
   ].sort((a, b) => new Date(b.deadline) - new Date(a.deadline));
 
@@ -312,7 +301,7 @@ async function loadChallenges() {
       <p class="challenge-vs">vs ${opponent}</p>
       ${ch.theme ? `<p class="challenge-theme">Theme: "${ch.theme}"</p>` : ""}
       <p class="challenge-deadline">${expired ? "⌛ Ended" : "⏰ Ends"}: ${deadline.toLocaleString()}</p>
-    ${isIncoming ? `
+      ${isIncoming ? `
         <div class="challenge-actions">
           <button class="accept-challenge-btn" data-id="${ch.id}">✓ Accept</button>
           <button class="decline-challenge-btn" data-id="${ch.id}">✕ Decline</button>
@@ -323,6 +312,7 @@ async function loadChallenges() {
         </div>
       ` : ""}
     `;
+
     if (isIncoming) {
       item.querySelector(".accept-challenge-btn").addEventListener("click", async () => {
         await updateDoc(doc(db, "challenges", ch.id), { status: "accepted" });
