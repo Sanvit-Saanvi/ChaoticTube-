@@ -125,6 +125,19 @@ async function loadPending() {
   });
 }
 
+// ── Custom titles ──────────────────────────────────
+function getCustomTitle(friendName) {
+  return localStorage.getItem(`ct-title-${friendName}`) || "";
+}
+
+function setCustomTitle(friendName, title) {
+  if (title) {
+    localStorage.setItem(`ct-title-${friendName}`, title);
+  } else {
+    localStorage.removeItem(`ct-title-${friendName}`);
+  }
+}
+
 // ── Load friends ───────────────────────────────────
 async function loadFriends() {
   const q = query(
