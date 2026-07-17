@@ -317,6 +317,10 @@ async function loadChallenges() {
           <button class="accept-challenge-btn" data-id="${ch.id}">✓ Accept</button>
           <button class="decline-challenge-btn" data-id="${ch.id}">✕ Decline</button>
         </div>
+      ` : ch.direction === "sent" && ch.status === "pending" ? `
+        <div class="challenge-actions">
+          <button class="cancel-challenge-btn" data-id="${ch.id}">✕ Cancel</button>
+        </div>
       ` : ""}
     `;
 
@@ -326,6 +330,15 @@ async function loadChallenges() {
         loadChallenges();
       });
       item.querySelector(".decline-challenge-btn").addEventListener("click", async () => {
+        await deleteDoc(doc(db, "challenges", ch.id));
+        loadChallenges();
+      });
+    }
+
+    const cancelBtn = item.querySelector(".cancel-challenge-btn");
+    if (cancelBtn) {
+      cancelBtn.addEventListener("click", async () => {
+        if (!confirm("Cancel this challenge?")) return;
         await deleteDoc(doc(db, "challenges", ch.id));
         loadChallenges();
       });
