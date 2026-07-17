@@ -312,7 +312,7 @@ async function loadChallenges() {
       <p class="challenge-vs">vs ${opponent}</p>
       ${ch.theme ? `<p class="challenge-theme">Theme: "${ch.theme}"</p>` : ""}
       <p class="challenge-deadline">${expired ? "⌛ Ended" : "⏰ Ends"}: ${deadline.toLocaleString()}</p>
-     ${isIncoming ? `
+    ${isIncoming ? `
         <div class="challenge-actions">
           <button class="accept-challenge-btn" data-id="${ch.id}">✓ Accept</button>
           <button class="decline-challenge-btn" data-id="${ch.id}">✕ Decline</button>
@@ -321,7 +321,7 @@ async function loadChallenges() {
         <div class="challenge-actions">
           <button class="cancel-challenge-btn" data-id="${ch.id}">✕ Cancel</button>
         </div>
-   ` : ""}
+      ` : ""}
     `;
     if (isIncoming) {
       item.querySelector(".accept-challenge-btn").addEventListener("click", async () => {
