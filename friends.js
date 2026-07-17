@@ -321,7 +321,8 @@ async function loadChallenges() {
         <div class="challenge-actions">
           <button class="cancel-challenge-btn" data-id="${ch.id}">✕ Cancel</button>
         </div>
-      ` : ""}
+   ` : ""}
+    `;
     if (isIncoming) {
       item.querySelector(".accept-challenge-btn").addEventListener("click", async () => {
         await updateDoc(doc(db, "challenges", ch.id), { status: "accepted" });
