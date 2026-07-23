@@ -991,3 +991,17 @@ main {
   color: var(--accent);
   margin-top: 2px;
 }
+
+.compress-hint {
+  font-size: 12px;
+  color: var(--text-sub);
+  text-align: center;
+  margin-top: 4px;
+}
+
+.compress-link {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.compress-link:hover { text-decoration: underline; }
