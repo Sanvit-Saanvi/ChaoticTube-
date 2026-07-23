@@ -69,7 +69,7 @@
   </header>
 
   <!-- Theme Panel -->
-  <div id="themePanel" content="theme-panel hidden">
+  <div id="themePanel" class="theme-panel hidden">
     <div class="theme-panel-inner">
       <div class="theme-section">
         <span class="theme-label">Mode</span>
@@ -117,6 +117,7 @@
         <div class="upload-left">
           <button class="upload-tab active" data-tab="file">📁 Upload File</button>
           <button class="upload-tab" data-tab="youtube">▶️ YouTube Link</button>
+          <button class="upload-tab" id="compressBtn">📦 Compress Video</button>
         </div>
       </div>
 
@@ -171,6 +172,24 @@
         <button class="cat-btn" data-cat="most-underrated">🏅 Most Underrated</button>
       </div>
       <button id="modalClose" class="modal-close">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Compress Modal -->
+  <div id="compressModal" class="modal-overlay hidden">
+    <div class="modal">
+      <h3>📦 Video Too Large?</h3>
+      <p style="color: var(--text-sub); font-size: 14px;">Follow these steps to compress your video for free:</p>
+      <div class="compress-steps">
+        <p>1️⃣ Click the button below to open the free compressor</p>
+        <p>2️⃣ Drag your video in</p>
+        <p>3️⃣ Wait for it to compress</p>
+        <p>4️⃣ Download the compressed video</p>
+        <p>5️⃣ Come back and upload it here!</p>
+      </div>
+      <a href="https://clideo.com/compress-video" target="_blank" class="compress-open-btn">🔗 Open Free Compressor →</a>
+      <p class="compress-note">✅ No login needed · ✅ Free · ✅ Works in your browser</p>
+      <button id="compressModalClose" class="modal-close">Back to ChaoticTube</button>
     </div>
   </div>
 
