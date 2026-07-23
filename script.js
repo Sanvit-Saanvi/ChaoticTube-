@@ -4,6 +4,7 @@ import {
   collection, addDoc, getDocs, deleteDoc, doc,
   serverTimestamp, query, orderBy, setDoc, updateDoc, increment, where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
 // ── Cloudinary config ──────────────────────────────
 const CLOUD_NAME    = "uuw9obun";
 const UPLOAD_PRESET = "ChaoticTube";
@@ -56,7 +57,7 @@ document.querySelectorAll(".upload-tab").forEach(tab => {
     if (tab.dataset.tab === "file") {
       tabFile.classList.remove("hidden");
       tabYoutube.classList.add("hidden");
-    } else {
+    } else if (tab.dataset.tab === "youtube") {
       tabFile.classList.add("hidden");
       tabYoutube.classList.remove("hidden");
     }
@@ -171,7 +172,7 @@ uploadBtn.addEventListener("click", async () => {
       avatar:              prefs.avatar || "🎭",
       hearts:              0,
       creatorPasswordHash: passwordHash,
-      profileColor: prefs.profileColor || "#7c6af7",
+      profileColor:        prefs.profileColor || "#7c6af7",
     });
     const newVideo = {
       id: docRef.id, name: title, url: data.secure_url,
@@ -180,6 +181,7 @@ uploadBtn.addEventListener("click", async () => {
       avatar: prefs.avatar || "🎭",
       hearts: 0,
       creatorPasswordHash: passwordHash,
+      profileColor: prefs.profileColor || "#7c6af7",
     };
     allVideos.unshift(newVideo);
     renderFeed(allVideos);
@@ -234,7 +236,7 @@ youtubeBtn.addEventListener("click", async () => {
       avatar:              prefs.avatar || "🎭",
       hearts:              0,
       creatorPasswordHash: passwordHash,
-      profileColor: prefs.profileColor || "#7c6af7",
+      profileColor:        prefs.profileColor || "#7c6af7",
     });
     const newVideo = {
       id: docRef.id, name: title, youtubeId: videoId,
@@ -243,6 +245,7 @@ youtubeBtn.addEventListener("click", async () => {
       avatar: prefs.avatar || "🎭",
       hearts: 0,
       creatorPasswordHash: passwordHash,
+      profileColor: prefs.profileColor || "#7c6af7",
     };
     allVideos.unshift(newVideo);
     renderFeed(allVideos);
@@ -335,21 +338,6 @@ function toggleHeart(videoId) {
   }
 }
 
-// ── Reactions ──────────────────────────────────────
-const REACTIONS = ["😂", "🔥", "💀", "🤯"];
-
-function getMyReaction(videoId) {
-  return localStorage.getItem(`ct-reaction-${videoId}`) || null;
-}
-
-function setMyReaction(videoId, emoji) {
-  if (emoji) {
-    localStorage.setItem(`ct-reaction-${videoId}`, emoji);
-  } else {
-    localStorage.removeItem(`ct-reaction-${videoId}`);
-  }
-}
-
 // ── Watch History ──────────────────────────────────
 function getHistory() {
   try { return JSON.parse(localStorage.getItem("ct-history")) || []; } catch { return []; }
@@ -388,9 +376,25 @@ function getProgress(videoId) {
   return entry ? entry.progress : 0;
 }
 
+// ── Reactions ──────────────────────────────────────
+const REACTIONS = ["😂", "🔥", "💀", "🤯"];
+
+function getMyReaction(videoId) {
+  return localStorage.getItem(`ct-reaction-${videoId}`) || null;
+}
+
+function setMyReaction(videoId, emoji) {
+  if (emoji) {
+    localStorage.setItem(`ct-reaction-${videoId}`, emoji);
+  } else {
+    localStorage.removeItem(`ct-reaction-${videoId}`);
+  }
+}
+
 // ── Render ─────────────────────────────────────────
 function renderFeed(videos) {
   feed.innerHTML = "";
+
   // Apply layout
   const prefs = getPrefs();
   if (prefs.layout === "list") {
@@ -398,6 +402,8 @@ function renderFeed(videos) {
   } else {
     feed.classList.remove("list-layout");
   }
+
+  emptyState.classList.toggle("hidden", videos.length > 0);
   const searchTerm = searchInput.value.trim().toLowerCase();
   feedTitle.textContent = searchTerm ? `Results for "${searchInput.value.trim()}"` : "All Videos";
   feedCount.textContent = `${videos.length} video${videos.length !== 1 ? "s" : ""}`;
@@ -416,8 +422,8 @@ function renderFeed(videos) {
     const mediaHtml = video.type === "youtube"
       ? `<div class="video-media-wrap">${pinBadge}<iframe src="https://www.youtube.com/embed/${video.youtubeId}" allowfullscreen></iframe>${progressBar}</div>`
       : `<div class="video-media-wrap">${pinBadge}<video controls preload="metadata"><source src="${video.url}" type="video/mp4"></video>${progressBar}</div>`;
-    
-      card.innerHTML = `
+
+    card.innerHTML = `
       ${mediaHtml}
       <div class="card-body">
         <div class="card-title-row">
@@ -457,7 +463,6 @@ function renderFeed(videos) {
       await updateDoc(doc(db, "videos", video.id), {
         hearts: increment(hearted ? 1 : -1)
       });
-      
       video.hearts = (video.hearts || 0) + (hearted ? 1 : -1);
       const existingBadge = card.querySelector(".viewers-fav");
       if (video.hearts >= 5 && !existingBadge) {
@@ -476,24 +481,19 @@ function renderFeed(videos) {
         const emoji   = btn.dataset.emoji;
         const videoId = btn.dataset.videoId;
         const current = getMyReaction(videoId);
-
-        // Build Firestore update
         const updates = {};
 
         if (current === emoji) {
-          // Un-react
           updates[`reactions.${emoji}`] = increment(-1);
           setMyReaction(videoId, null);
           video.reactions = video.reactions || {};
           video.reactions[emoji] = Math.max(0, (video.reactions[emoji] || 0) - 1);
         } else {
-          // Remove old reaction
           if (current) {
             updates[`reactions.${current}`] = increment(-1);
             video.reactions = video.reactions || {};
             video.reactions[current] = Math.max(0, (video.reactions[current] || 0) - 1);
           }
-          // Add new reaction
           updates[`reactions.${emoji}`] = increment(1);
           setMyReaction(videoId, emoji);
           video.reactions = video.reactions || {};
@@ -502,7 +502,6 @@ function renderFeed(videos) {
 
         await updateDoc(doc(db, "videos", videoId), updates);
 
-        // Update UI
         card.querySelectorAll(".reaction-btn").forEach(b => {
           const e = b.dataset.emoji;
           const count = (video.reactions && video.reactions[e]) || 0;
@@ -514,11 +513,9 @@ function renderFeed(videos) {
 
     const videoEl = card.querySelector("video");
     if (videoEl) {
-      // Apply volume setting
       const prefs = getPrefs();
       videoEl.volume = (prefs.volume || 100) / 100;
 
-      // Apply autoplay setting
       if (prefs.autoplay) {
         const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
@@ -531,6 +528,7 @@ function renderFeed(videos) {
         }, { threshold: 0.7 });
         observer.observe(videoEl);
       }
+
       videoEl.addEventListener("play", () => addToHistory(video));
       videoEl.addEventListener("timeupdate", () => {
         if (videoEl.duration) {
@@ -551,7 +549,6 @@ function renderFeed(videos) {
       const enteredPassword = prompt(`Enter your creator password to edit "${video.name}":`);
       if (!enteredPassword) return;
 
-      // Check admin password
       if (enteredPassword !== ADMIN_PASSWORD) {
         if (!video.creatorPasswordHash) {
           setStatus("This video has no creator password set. Go to ⚙️ Settings → Personal to set one.", "error");
@@ -642,168 +639,6 @@ searchInput.addEventListener("input", () => {
   }
 });
 
-// ── Initial load ───────────────────────────────────
-async function loadVideos() {
-  try {
-    // Get pinned videos first
-    const pinnedSnap = await getDocs(collection(db, "pinned"));
-    const pinnedIds = pinnedSnap.docs.map(d => d.data().videoId);
-
-    allVideos = await getVideos();
-
-    // Sort so pinned videos come first
-    allVideos.sort((a, b) => {
-      const aPin = pinnedIds.indexOf(a.id);
-      const bPin = pinnedIds.indexOf(b.id);
-      if (aPin !== -1 && bPin !== -1) return aPin - bPin;
-      if (aPin !== -1) return -1;
-      if (bPin !== -1) return 1;
-      return 0;
-    });
-
-    // Mark pinned videos
-    allVideos = allVideos.map(v => ({
-      ...v,
-      pinned: pinnedIds.includes(v.id)
-    }));
-
-        // Apply sort order from settings
-    const prefs = getPrefs();
-    const nonPinned = allVideos.filter(v => !v.pinned);
-    const pinned = allVideos.filter(v => v.pinned);
-
-    if (prefs.sort === "oldest") {
-      nonPinned.sort((a, b) => {
-        const aTime = a.createdAt?.toDate?.() || new Date(0);
-        const bTime = b.createdAt?.toDate?.() || new Date(0);
-        return aTime - bTime;
-      });
-    } else if (prefs.sort === "random") {
-      for (let i = nonPinned.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [nonPinned[i], nonPinned[j]] = [nonPinned[j], nonPinned[i]];
-      }
-    }
-
-    allVideos = [...pinned, ...nonPinned];
-
-    renderFeed(allVideos);
-
-    renderFeed(allVideos);
-    checkAnnouncement();
-    checkFriendUploads(allVideos);
-    loadForYou(allVideos);
-  } catch (err) {
-    feed.innerHTML = "";
-    setStatus("Failed to load videos: " + err.message, "error");
-  }
-}
-
-// ── Force fresh load when coming back to page ──────
-window.addEventListener("pageshow", (e) => {
-  if (e.persisted) {
-    window.location.reload();
-  }
-});
-
-// ── Announcement Banner ────────────────────────────
-async function checkAnnouncement() {
-  try {
-    const { doc, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
-    const snap = await getDoc(doc(db, "settings", "announcement"));
-    if (!snap.exists()) return;
-
-    const data = snap.data();
-
-    // Check if scheduled
-    if (!data.active && data.scheduledFor) {
-      const scheduledTime = new Date(data.scheduledFor);
-      if (new Date() < scheduledTime) return;
-
-      // Time has passed — activate it
-      const { updateDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
-      await updateDoc(doc(db, "settings", "announcement"), { active: true });
-    }
-
-    if (!data.active) return;
-
-    // Show banner
-    const existing = document.getElementById("announcementBanner");
-    if (existing) existing.remove();
-
-    const banner = document.createElement("div");
-    banner.id = "announcementBanner";
-    banner.className = "announcement-banner";
-    banner.innerHTML = `
-      <span>📢 ${data.text}</span>
-      <button id="closeAnnouncement">✕</button>
-    `;
-    document.querySelector("header").after(banner);
-
-    document.getElementById("closeAnnouncement").addEventListener("click", () => {
-      banner.remove();
-    });
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-// ── Friend upload notifications ────────────────────
-async function checkFriendUploads(videos) {
-  try {
-    const prefs = getPrefs();
-    if (!prefs.displayName || !prefs.newVideoNotif) return;
-
-    // Get friends list
-    const { collection: col, getDocs: gd, query: q, where: w } =
-      await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
-
-    const friendsSnap = await gd(q(col(db, "friends"), w("user1", "==", prefs.displayName)));
-    const friendNames = friendsSnap.docs.map(d => d.data().user2);
-
-    if (friendNames.length === 0) return;
-
-    // Check for videos uploaded in last 24 hours by friends
-    const oneDayAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);
-    const lastChecked = localStorage.getItem("ct-last-notif-check");
-    const checkFrom = lastChecked ? new Date(lastChecked) : oneDayAgo;
-
-    const newFriendVideos = videos.filter(v => {
-      if (!friendNames.includes(v.displayName)) return false;
-      if (!v.createdAt?.toDate) return false;
-      return v.createdAt.toDate() > checkFrom;
-    });
-
-    localStorage.setItem("ct-last-notif-check", new Date().toISOString());
-
-    if (newFriendVideos.length === 0) return;
-
-    // Show toast for most recent
-    const latest = newFriendVideos[0];
-    showToast(`🎬 ${latest.displayName} uploaded "${latest.name}"!`);
-
-  } catch (err) {
-    console.error(err);
-  }
-}
-
-function showToast(message) {
-  const existing = document.getElementById("uploadToast");
-  if (existing) existing.remove();
-
-  const toast = document.createElement("div");
-  toast.id = "uploadToast";
-  toast.className = "upload-toast";
-  toast.innerHTML = `
-    <span>${message}</span>
-    <button id="closeToast">✕</button>
-  `;
-  document.body.appendChild(toast);
-
-  document.getElementById("closeToast").addEventListener("click", () => toast.remove());
-  setTimeout(() => { if (toast.parentNode) toast.remove(); }, 6000);
-}
-
 // ── For You ────────────────────────────────────────
 async function loadForYou(allVideos) {
   try {
@@ -812,7 +647,6 @@ async function loadForYou(allVideos) {
     const forYouFeed    = document.getElementById("forYouFeed");
     const forYouCount   = document.getElementById("forYouCount");
 
-    // Get friends
     const friendNames = [];
     if (prefs.displayName) {
       const friendsSnap = await getDocs(query(
@@ -825,7 +659,6 @@ async function loadForYou(allVideos) {
     const forYouVideos = [];
     const seen = new Set();
 
-    // 1. Videos uploaded by friends
     for (const video of allVideos) {
       if (friendNames.includes(video.displayName) && !seen.has(video.id)) {
         forYouVideos.push({ ...video, reason: `📨 Uploaded by ${video.displayName}` });
@@ -833,7 +666,6 @@ async function loadForYou(allVideos) {
       }
     }
 
-    // 2. Popular videos from everyone (most hearts + reactions)
     const popularVideos = [...allVideos]
       .filter(v => !seen.has(v.id))
       .map(v => {
@@ -891,5 +723,165 @@ async function loadForYou(allVideos) {
     console.error(err);
   }
 }
+
+// ── Friend upload notifications ────────────────────
+async function checkFriendUploads(videos) {
+  try {
+    const prefs = getPrefs();
+    if (!prefs.displayName || !prefs.newVideoNotif) return;
+
+    const friendsSnap = await getDocs(query(
+      collection(db, "friends"),
+      where("user1", "==", prefs.displayName)
+    ));
+    const friendNames = friendsSnap.docs.map(d => d.data().user2);
+    if (friendNames.length === 0) return;
+
+    const lastChecked = localStorage.getItem("ct-last-notif-check");
+    const checkFrom = lastChecked ? new Date(lastChecked) : new Date(Date.now() - 24 * 60 * 60 * 1000);
+
+    const newFriendVideos = videos.filter(v => {
+      if (!friendNames.includes(v.displayName)) return false;
+      if (!v.createdAt?.toDate) return false;
+      return v.createdAt.toDate() > checkFrom;
+    });
+
+    localStorage.setItem("ct-last-notif-check", new Date().toISOString());
+    if (newFriendVideos.length === 0) return;
+
+    showToast(`🎬 ${newFriendVideos[0].displayName} uploaded "${newFriendVideos[0].name}"!`);
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+function showToast(message) {
+  const existing = document.getElementById("uploadToast");
+  if (existing) existing.remove();
+
+  const toast = document.createElement("div");
+  toast.id = "uploadToast";
+  toast.className = "upload-toast";
+  toast.innerHTML = `
+    <span>${message}</span>
+    <button id="closeToast">✕</button>
+  `;
+  document.body.appendChild(toast);
+
+  document.getElementById("closeToast").addEventListener("click", () => toast.remove());
+  setTimeout(() => { if (toast.parentNode) toast.remove(); }, 6000);
+}
+
+// ── Announcement Banner ────────────────────────────
+async function checkAnnouncement() {
+  try {
+    const { doc: d, getDoc } = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js");
+    const snap = await getDoc(d(db, "settings", "announcement"));
+    if (!snap.exists()) return;
+
+    const data = snap.data();
+
+    if (!data.active && data.scheduledFor) {
+      const scheduledTime = new Date(data.scheduledFor);
+      if (new Date() < scheduledTime) return;
+      await updateDoc(d(db, "settings", "announcement"), { active: true });
+    }
+
+    if (!data.active) return;
+
+    const existing = document.getElementById("announcementBanner");
+    if (existing) existing.remove();
+
+    const banner = document.createElement("div");
+    banner.id = "announcementBanner";
+    banner.className = "announcement-banner";
+    banner.innerHTML = `
+      <span>📢 ${data.text}</span>
+      <button id="closeAnnouncement">✕</button>
+    `;
+    document.querySelector("header").after(banner);
+
+    document.getElementById("closeAnnouncement").addEventListener("click", () => {
+      banner.remove();
+    });
+  } catch (err) {
+    console.error(err);
+  }
+}
+
+// ── Compress Modal ─────────────────────────────────
+const compressBtn        = document.getElementById("compressBtn");
+const compressModal      = document.getElementById("compressModal");
+const compressModalClose = document.getElementById("compressModalClose");
+
+compressBtn.addEventListener("click", () => {
+  compressModal.classList.remove("hidden");
+});
+
+compressModalClose.addEventListener("click", () => {
+  compressModal.classList.add("hidden");
+});
+
+compressModal.addEventListener("click", (e) => {
+  if (e.target === compressModal) compressModal.classList.add("hidden");
+});
+
+// ── Initial load ───────────────────────────────────
+async function loadVideos() {
+  try {
+    const pinnedSnap = await getDocs(collection(db, "pinned"));
+    const pinnedIds  = pinnedSnap.docs.map(d => d.data().videoId);
+
+    allVideos = await getVideos();
+
+    allVideos.sort((a, b) => {
+      const aPin = pinnedIds.indexOf(a.id);
+      const bPin = pinnedIds.indexOf(b.id);
+      if (aPin !== -1 && bPin !== -1) return aPin - bPin;
+      if (aPin !== -1) return -1;
+      if (bPin !== -1) return 1;
+      return 0;
+    });
+
+    allVideos = allVideos.map(v => ({
+      ...v,
+      pinned: pinnedIds.includes(v.id)
+    }));
+
+    const prefs = getPrefs();
+    const nonPinned = allVideos.filter(v => !v.pinned);
+    const pinned    = allVideos.filter(v => v.pinned);
+
+    if (prefs.sort === "oldest") {
+      nonPinned.sort((a, b) => {
+        const aTime = a.createdAt?.toDate?.() || new Date(0);
+        const bTime = b.createdAt?.toDate?.() || new Date(0);
+        return aTime - bTime;
+      });
+    } else if (prefs.sort === "random") {
+      for (let i = nonPinned.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [nonPinned[i], nonPinned[j]] = [nonPinned[j], nonPinned[i]];
+      }
+    }
+
+    allVideos = [...pinned, ...nonPinned];
+
+    renderFeed(allVideos);
+    checkAnnouncement();
+    checkFriendUploads(allVideos);
+    loadForYou(allVideos);
+  } catch (err) {
+    feed.innerHTML = "";
+    setStatus("Failed to load videos: " + err.message, "error");
+  }
+}
+
+// ── Force fresh load when coming back to page ──────
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) {
+    window.location.reload();
+  }
+});
 
 loadVideos();
