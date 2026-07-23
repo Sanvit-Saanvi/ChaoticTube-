@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ChaoticTube</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -21,7 +22,6 @@
 
       const prefs = JSON.parse(localStorage.getItem("ct-prefs")) || {};
 
-      // Font size
       if (prefs.font === "small") {
         document.body.style.zoom = "0.85";
       } else if (prefs.font === "large") {
@@ -30,22 +30,18 @@
         document.body.style.zoom = "1";
       }
 
-      // Card size
       const cardMin = prefs.card === "compact" ? "220px" : prefs.card === "large" ? "380px" : "300px";
       document.documentElement.style.setProperty("--card-min", cardMin);
+      document.documentElement.setAttribute("data-card", prefs.card || "normal");
 
-      // Feed layout
       if (prefs.layout === "list") {
         document.addEventListener("DOMContentLoaded", () => {
           const grid = document.getElementById("videoFeed");
           if (grid) grid.classList.add("list-layout");
         });
-        // Also try immediately in case DOM is already loaded
         const grid = document.getElementById("videoFeed");
         if (grid) grid.classList.add("list-layout");
       }
-      // Apply card size to body as data attribute for CSS
-      document.documentElement.setAttribute("data-card", prefs.card || "normal");
 
     } catch {}
   </script>
@@ -73,7 +69,7 @@
   </header>
 
   <!-- Theme Panel -->
-  <div id="themePanel" class="theme-panel hidden">
+  <div id="themePanel" content="theme-panel hidden">
     <div class="theme-panel-inner">
       <div class="theme-section">
         <span class="theme-label">Mode</span>
@@ -139,6 +135,7 @@
             <svg id="uploadSpinner" class="spinner hidden" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg>
           </button>
         </div>
+        <p class="compress-hint">📦 Video too large? <a href="https://clideo.com/compress-video" target="_blank" class="compress-link">Compress it free here</a> — no login needed!</p>
       </div>
 
       <!-- YouTube Tab -->
