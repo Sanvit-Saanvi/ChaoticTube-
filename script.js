@@ -870,6 +870,7 @@ async function loadVideos() {
     renderFeed(allVideos);
     checkAnnouncement();
     checkFriendUploads(allVideos);
+    loadForYou(allVideos);
   } catch (err) {
     feed.innerHTML = "";
     setStatus("Failed to load videos: " + err.message, "error");
