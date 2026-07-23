@@ -395,7 +395,6 @@ function setMyReaction(videoId, emoji) {
 function renderFeed(videos) {
   feed.innerHTML = "";
 
-  // Apply layout
   const prefs = getPrefs();
   if (prefs.layout === "list") {
     feed.classList.add("list-layout");
@@ -475,7 +474,6 @@ function renderFeed(videos) {
       }
     });
 
-    // Reactions
     card.querySelectorAll(".reaction-btn").forEach(btn => {
       btn.addEventListener("click", async () => {
         const emoji   = btn.dataset.emoji;
@@ -646,6 +644,8 @@ async function loadForYou(allVideos) {
     const forYouSection = document.getElementById("forYouSection");
     const forYouFeed    = document.getElementById("forYouFeed");
     const forYouCount   = document.getElementById("forYouCount");
+
+    if (!forYouSection) return;
 
     const friendNames = [];
     if (prefs.displayName) {
@@ -884,4 +884,4 @@ window.addEventListener("pageshow", (e) => {
   }
 });
 
-
+loadVideos();
