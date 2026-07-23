@@ -992,13 +992,13 @@ main {
   margin-top: 2px;
 }
 
-.compress-hint {
-  font-size: 12px;
+..compress-hint {
+  font-size: 14px;
   color: var(--text-sub);
   text-align: center;
-  margin-top: 4px;
+  margin-top: 8px;
+  font-weight: 500;
 }
-
 .compress-link {
   color: var(--accent);
   text-decoration: none;
