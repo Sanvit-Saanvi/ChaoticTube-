@@ -1005,3 +1005,35 @@ main {
 }
 
 .compress-link:hover { text-decoration: underline; }
+
+/* ── Compress modal ──────────────────────────────── */
+.compress-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  background: var(--surface2);
+  border-radius: 8px;
+  padding: 14px;
+  font-size: 13px;
+}
+
+.compress-open-btn {
+  display: block;
+  text-align: center;
+  padding: 12px;
+  background: var(--accent);
+  color: #fff;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: background 0.15s;
+}
+
+.compress-open-btn:hover { background: var(--accent-h); }
+
+.compress-note {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-sub);
+}
