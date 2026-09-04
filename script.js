@@ -10,7 +10,7 @@ const CLOUD_NAME    = "uuw9obun";
 const UPLOAD_PRESET = "ChaoticTube";
 
 // ── Admin password ─────────────────────────────────
-const ADMIN_PASSWORD = "1357";
+const ADMIN_PASSWORD = "2727";
 
 // ── Elements ───────────────────────────────────────
 const uploadBtn         = document.getElementById("uploadBtn");
