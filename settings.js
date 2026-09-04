@@ -432,7 +432,7 @@ function initControls(settings) {
   loadStats();
 
   // ── Admin Panel ────────────────────────────────
-  const ADMIN_PWD = "1357";
+  const ADMIN_PWD = "2727";
 
   document.getElementById("adminUnlockBtn").addEventListener("click", async () => {
     const pwd = document.getElementById("adminPwdInput").value;
